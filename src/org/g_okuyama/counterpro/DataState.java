@@ -83,8 +83,10 @@ public class DataState extends TabActivity implements OnTabChangeListener{
     			TableRow tr = new TableRow(this);
     			TextView tv1 = new TextView(this);
     			tv1.setText(str2[0]);
+    			tv1.setPadding(10, 0, 0, 0);
     			TextView tv2 = new TextView(this);
     			tv2.setText(str2[1]);
+    			tv2.setPadding(0, 0, 10, 0);
     			tr.addView(tv1);
     			tr.addView(tv2);
     			tl.addView(tr, new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -124,8 +126,10 @@ public class DataState extends TabActivity implements OnTabChangeListener{
     			TableRow tr = new TableRow(this);
     			TextView tv1 = new TextView(this);
     			tv1.setText(str_a2[0]);
+    			tv1.setPadding(20, 0, 0, 0);
     			TextView tv2 = new TextView(this);
     			tv2.setText(str_a2[1]);
+    			tv2.setPadding(0, 0, 20, 0);
     			tr.addView(tv1);
     			tr.addView(tv2);
     			tl.addView(tr, new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -142,8 +146,10 @@ public class DataState extends TabActivity implements OnTabChangeListener{
     			TableRow tr = new TableRow(this);
     			TextView tv1 = new TextView(this);
     			tv1.setText(str_b2[0]);
+    			tv1.setPadding(20, 0, 0, 0);
     			TextView tv2 = new TextView(this);
     			tv2.setText(str_b2[1]);
+    			tv2.setPadding(0, 0, 20, 0);
     			tr.addView(tv1);
     			tr.addView(tv2);
     			tl.addView(tr, new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT,

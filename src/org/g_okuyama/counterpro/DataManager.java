@@ -1,6 +1,7 @@
 package org.g_okuyama.counterpro;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.regex.Pattern;
 
@@ -34,6 +35,8 @@ public class DataManager extends Activity {
 	//保存データリスト
 	String[] savedata = null;
 
+	ArrayList<DataList> mDataArray = null; 
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,17 @@ public class DataManager extends Activity {
     	String query = "select * from counter;";
     	Cursor c = db.rawQuery(query, null);
 
-    	//保存データ数を取得
+    	mDataArray = new ArrayList<DataList>();
+    	
+		//タイトルを作成
+		DataList titleList = new DataList();
+		titleList.setName(getString(R.string.cnt_save_title));
+		titleList.setCount(getString(R.string.dm_count_num));
+        titleList.setDate(getString(R.string.dm_savetime));
+        titleList.setDBID(-9999);
+		mDataArray.add(titleList);
+
+		//保存データ数を取得
     	int rowcount = c.getCount();
 
     	if(rowcount == 0){
@@ -83,6 +96,8 @@ public class DataManager extends Activity {
 
     			dbid[i] = c.getInt(0);
 
+    			String countStr = "";
+    			
     			if(c.getString(6).equals("2")){
     				String[] cstr = cnt.split(",");
     				savedata[i] = new String(title + crlf
@@ -93,6 +108,9 @@ public class DataManager extends Activity {
 							+ crlf
 							+ getString(R.string.dm_place) + place);
 							*/
+    				
+    				countStr = cstr[0] + ", " + cstr[1];
+    				
     			}else{
     				savedata[i] = new String(title + crlf
 							+ getString(R.string.dm_count_num) + cnt + crlf
@@ -100,10 +118,22 @@ public class DataManager extends Activity {
     						/*
 							+ crlf
 							+ getString(R.string.dm_place) + place);
-							*/    				
+							*/
+    				
+    				countStr = cnt;
     			}
 
-    			//降順に並べる
+
+    			String[] dstr = date.split(" ");
+
+				//表示するリストを作成
+				DataList list = new DataList();
+				list.setName(title);
+				list.setCount(countStr);
+                list.setDate(dstr[0]);
+				mDataArray.add(list);
+				
+				//降順に並べる
     			c.moveToPrevious();
     		}
     	}
@@ -112,7 +142,8 @@ public class DataManager extends Activity {
 
 		//保存データの表示
 		ListView lv = (ListView)this.findViewById(R.id.widget42);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.data, savedata);
+		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.data, savedata);
+		DataArrayAdapter adapter = new DataArrayAdapter(this, android.R.layout.simple_list_item_1, mDataArray);
 		lv.setAdapter(adapter);
 
 		//データ選択時のリスナを登録
@@ -133,7 +164,7 @@ public class DataManager extends Activity {
         	//intent作成
         	Intent intent = new Intent(DataManager.this, DataState.class);
         	//選択項目のDBのIDを渡す
-        	intent.putExtra("id", dbid[position]);
+        	intent.putExtra("id", dbid[position-1]);//positionからタイトル分の1を引く
         	//intentを発行しカウントの詳細画面を表示
         	startActivityForResult(intent, REQUEST_CODE);
         }
@@ -150,7 +181,8 @@ public class DataManager extends Activity {
         		return true;
         	}
 			
-			position = pos;
+			//タイトル分を引く
+			position = pos -1;
 
 			if(Counter.CHARGE_FLAG){
 				new AlertDialog.Builder(DataManager.this)
